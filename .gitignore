@@ -1,0 +1,10 @@
+*~
+*.bak
+target
+.project
+.classpath
+.settings
+.idea/
+*.iml
+release/
+log_dir_IS_UNDEFINED/
