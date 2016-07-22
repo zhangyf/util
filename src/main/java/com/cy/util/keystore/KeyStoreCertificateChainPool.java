@@ -208,16 +208,6 @@ public class KeyStoreCertificateChainPool {
         return subjectNode;
     }
 
-    private void printMap() {
-        Set<Map.Entry<Principal, List<CertificateNode>>> entrySet = map.entrySet();
-        Iterator<Map.Entry<Principal, List<CertificateNode>>> iterator = entrySet.iterator();
-        List<X509Certificate> certificateList = new ArrayList<X509Certificate>();
-        while (iterator.hasNext()) {
-            Map.Entry<Principal, List<CertificateNode>> entry = iterator.next();
-            LOGGER.debug("{} : {}", entry.getKey(), entry.getValue().size());
-        }
-    }
-
     public KeyStore getKeyStore() {
         return keyStore;
     }
