@@ -8,13 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SignatureException;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
+
+import static com.cy.util.keystore.KeyStoreUtil.loadKeyStore;
 
 public class TrustKeyStoreUtilTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrustKeyStoreUtilTest.class);
@@ -27,19 +26,20 @@ public class TrustKeyStoreUtilTest {
     public void testGetEntryCertificates() throws CertificateException, NoSuchAlgorithmException,
             KeyStoreException, IOException, NoSuchProviderException, SignatureException {
         URL url = ConfigurationUtils.locate(FileSystem.getDefaultFileSystem(), null, testTrustStore);
-        KeyStoreCertificateChainPool pool = TrustKeyStoreUtil.parseKeyStore(url.getFile(), testTrustStorePwd);
+        KeyStore keyStore = loadKeyStore(url.getFile(), testTrustStorePwd);
+        KeyStoreCertificateChainPool pool = TrustKeyStoreUtil.parseKeyStore(keyStore);
         List<X509Certificate> certificates = pool.getEntryCertificates();
         LOGGER.debug("entry certificates size : {}", certificates.size());
         for (X509Certificate x509Certificate : certificates) {
-            LOGGER.debug(formatCertChain(pool.getChain(x509Certificate)));
+            LOGGER.debug(formatCertChain(pool.getChain(x509Certificate), keyStore));
         }
     }
 
-    private String formatCertChain(List<X509Certificate> chain) {
+    private String formatCertChain(List<X509Certificate> chain, KeyStore keyStore) throws KeyStoreException {
         StringBuilder sb = new StringBuilder("chain : ");
         for (X509Certificate x509Certificate : chain) {
             sb.append("[")
-                    .append(x509Certificate.getSubjectDN())
+                    .append(keyStore.getCertificateAlias(x509Certificate))
                     .append("]")
                     .append(", ");
         }

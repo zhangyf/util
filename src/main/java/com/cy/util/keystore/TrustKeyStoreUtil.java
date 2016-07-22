@@ -19,6 +19,12 @@ public class TrustKeyStoreUtil extends KeyStoreUtil {
         return KeyStoreCertificateChainPool.createKeyStoreCertificateChainPool(keyStore);
     }
 
+    public static KeyStoreCertificateChainPool parseKeyStore(KeyStore keyStore)
+            throws CertificateException, NoSuchAlgorithmException, KeyStoreException,
+            IOException, NoSuchProviderException, SignatureException {
+        return KeyStoreCertificateChainPool.createKeyStoreCertificateChainPool(keyStore);
+    }
+
     public static X509Certificate findParentCertificate(X509Certificate childCertificate, KeyStore keyStore)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
             NoSuchProviderException, SignatureException {

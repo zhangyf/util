@@ -68,7 +68,7 @@ public class KeyStoreCertificateChainPool {
             for (CertificateNode node : nodes) {
                 if (node.getCertificate() != null &&
                         isChildAndParent(childCertificate, node.getCertificate()) &&
-                        isSame(childCertificate, node.getCertificate())) {
+                        !isSame(childCertificate, node.getCertificate())) {
                     certificateList.add(node.getCertificate());
                     childCertificate = node.getCertificate();
                     nodes = map.get(childCertificate.getIssuerDN());
@@ -107,7 +107,7 @@ public class KeyStoreCertificateChainPool {
             subjectNode.setCertificate(x509Certificate);
             subjectNode.setParentCertificateNode(issuerNode);
             if (!isSelfSigned(x509Certificate)) {
-                issuerNode.getChildCertificateNodes().add(issuerNode);
+                issuerNode.getChildCertificateNodes().add(subjectNode);
             } else {
                 // do nothing
             }
@@ -206,6 +206,16 @@ public class KeyStoreCertificateChainPool {
         }
 
         return subjectNode;
+    }
+
+    private void printMap() {
+        Set<Map.Entry<Principal, List<CertificateNode>>> entrySet = map.entrySet();
+        Iterator<Map.Entry<Principal, List<CertificateNode>>> iterator = entrySet.iterator();
+        List<X509Certificate> certificateList = new ArrayList<X509Certificate>();
+        while (iterator.hasNext()) {
+            Map.Entry<Principal, List<CertificateNode>> entry = iterator.next();
+            LOGGER.debug("{} : {}", entry.getKey(), entry.getValue().size());
+        }
     }
 
     public KeyStore getKeyStore() {
