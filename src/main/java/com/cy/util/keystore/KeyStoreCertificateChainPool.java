@@ -11,6 +11,16 @@ import java.util.*;
 
 import static com.cy.util.keystore.CertificateUtil.*;
 
+/**
+ * 为什么要写这个类？
+ * 在truskeystore中，不支持活取证书链，签发证书的时候，有可能有一些不规矩的家伙：
+ * 1、不同的证书subjectDN一样
+ * 2、可能证书链里不包含自签名的根证书，证书链不完整
+ * 3、自证书的issuerDN可能与父证书的subjectDN不一样
+ * 这些情况都是需要考虑的情况，所以创建了这个类，
+ * 现在，这个类暂时不支持3的那种异常情况，后面完善（完善办法：如果找不到父证书，就全局匹配去找，
+ * 给用户一个选择，是否要这样做）
+ */
 public class KeyStoreCertificateChainPool {
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyStoreCertificateChainPool.class);
 
