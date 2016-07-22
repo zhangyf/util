@@ -21,14 +21,14 @@ import static com.cy.util.keystore.CertificateUtil.*;
  * 现在，这个类暂时不支持3的那种异常情况，后面完善（完善办法：如果找不到父证书，就全局匹配去找，
  * 给用户一个选择，是否要这样做）
  */
-public class KeyStoreCertificateChainPool {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KeyStoreCertificateChainPool.class);
+public class TrustKeyStoreManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrustKeyStoreManager.class);
 
     private KeyStore keyStore;
 
     Map<Principal, List<CertificateNode>> map = new HashMap<Principal, List<CertificateNode>>();
 
-    private KeyStoreCertificateChainPool(KeyStore keyStore) {
+    private TrustKeyStoreManager(KeyStore keyStore) {
         this.keyStore = keyStore;
     }
 
@@ -222,17 +222,17 @@ public class KeyStoreCertificateChainPool {
         return keyStore;
     }
 
-    public static KeyStoreCertificateChainPool createKeyStoreCertificateChainPool(KeyStore keyStore)
+    public static TrustKeyStoreManager createKeyStoreCertificateChainPool(KeyStore keyStore)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException,
             NoSuchProviderException, SignatureException {
-        KeyStoreCertificateChainPool keyStoreCertificateChainPool = new KeyStoreCertificateChainPool(keyStore);
+        TrustKeyStoreManager trustKeyStoreManager = new TrustKeyStoreManager(keyStore);
         Enumeration<String> aliases = keyStore.aliases();
         while (aliases.hasMoreElements()) {
             String alias = aliases.nextElement();
             X509Certificate certificate = (X509Certificate) keyStore.getCertificate(alias);
-            keyStoreCertificateChainPool.addCertificate(certificate);
+            trustKeyStoreManager.addCertificate(certificate);
         }
-        return keyStoreCertificateChainPool;
+        return trustKeyStoreManager;
     }
 
     public static class CertificateNode {

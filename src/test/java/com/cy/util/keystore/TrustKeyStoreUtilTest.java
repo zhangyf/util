@@ -27,7 +27,7 @@ public class TrustKeyStoreUtilTest {
             KeyStoreException, IOException, NoSuchProviderException, SignatureException {
         URL url = ConfigurationUtils.locate(FileSystem.getDefaultFileSystem(), null, testTrustStore);
         KeyStore keyStore = loadKeyStore(url.getFile(), testTrustStorePwd);
-        KeyStoreCertificateChainPool pool = TrustKeyStoreUtil.parseKeyStore(keyStore);
+        TrustKeyStoreManager pool = TrustKeyStoreUtil.createTrustKeyStoreManager(keyStore);
         List<X509Certificate> certificates = pool.getEntryCertificates();
         LOGGER.debug("entry certificates size : {}", certificates.size());
         for (X509Certificate x509Certificate : certificates) {

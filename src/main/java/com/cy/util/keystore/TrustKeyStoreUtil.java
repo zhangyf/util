@@ -12,17 +12,17 @@ import java.util.Enumeration;
 public class TrustKeyStoreUtil extends KeyStoreUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrustKeyStoreUtil.class);
 
-    public static KeyStoreCertificateChainPool parseKeyStore(String keyStorePath, String pwd)
+    public static TrustKeyStoreManager createTrustKeyStoreManager(String keyStorePath, String pwd)
             throws CertificateException, NoSuchAlgorithmException, KeyStoreException,
             IOException, NoSuchProviderException, SignatureException {
         KeyStore keyStore = loadKeyStore(keyStorePath, pwd);
-        return KeyStoreCertificateChainPool.createKeyStoreCertificateChainPool(keyStore);
+        return TrustKeyStoreManager.createKeyStoreCertificateChainPool(keyStore);
     }
 
-    public static KeyStoreCertificateChainPool parseKeyStore(KeyStore keyStore)
+    public static TrustKeyStoreManager createTrustKeyStoreManager(KeyStore keyStore)
             throws CertificateException, NoSuchAlgorithmException, KeyStoreException,
             IOException, NoSuchProviderException, SignatureException {
-        return KeyStoreCertificateChainPool.createKeyStoreCertificateChainPool(keyStore);
+        return TrustKeyStoreManager.createKeyStoreCertificateChainPool(keyStore);
     }
 
     public static X509Certificate findParentCertificate(X509Certificate childCertificate, KeyStore keyStore)
