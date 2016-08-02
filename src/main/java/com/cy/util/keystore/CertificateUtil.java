@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -12,7 +13,14 @@ import java.security.cert.X509Certificate;
 public class CertificateUtil {
     private static final String CERTIFICATE_FORMAT = "X509";
 
-    public static X509Certificate loadCertificate(String certificateFile) throws IOException, CertificateException {
+    public static PublicKey getPublicKeyFromCert(String certificateFile)
+            throws IOException, CertificateException {
+        X509Certificate certificate = loadCertificate(certificateFile);
+        return certificate.getPublicKey();
+    }
+
+    public static X509Certificate loadCertificate(String certificateFile)
+            throws IOException, CertificateException {
         FileInputStream in = null;
         try {
             in = new FileInputStream(certificateFile);
@@ -53,4 +61,6 @@ public class CertificateUtil {
         }
         return false;
     }
+
+
 }
