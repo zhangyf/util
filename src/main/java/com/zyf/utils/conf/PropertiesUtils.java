@@ -7,7 +7,9 @@ import java.util.Properties;
 
 /**
  * Created by zhangyufeng on 2016/9/28.
+ *
  */
+
 public class PropertiesUtils {
 
     public static Map<String, String> loadPropertiesFile(InputStream in) throws IOException {
@@ -22,7 +24,7 @@ public class PropertiesUtils {
     }
 
     public static Map<String, String> loadPropertiesFile(String path) throws IOException {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         Properties properties = new Properties();
         
         try (InputStream in = new FileInputStream(path)){
