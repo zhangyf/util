@@ -12,13 +12,14 @@ import java.util.Map;
 public class PropertiesUtilsTest {
 
     @Test
-    public void testLoadProperties() throws ClassNotFoundException, IOException {
-        Map<String, String> params = new HashMap<>();
+    public void testLoadProperties() throws IOException {
 
-        params = PropertiesUtils.loadPropertiesFile("");
-        params.entrySet().forEach(p -> System.out.println(p.getKey() + "=" + p.getValue()));
+        ConfigTree params;
 
-        params = PropertiesUtils.loadPropertiesFile(getClass().getResourceAsStream("/testProperties.properties"));
-        params.entrySet().forEach(p -> System.out.println(p.getKey() + "=" + p.getValue()));
+        params = ConfigUtils.getConfig("");
+       // params.entrySet().forEach(p -> System.out.println(p.getKey() + "=" + p.getValue()));
+
+        params = ConfigUtils.getConfig(getClass().getResource("/testProperties.properties").toString());
+       // params.entrySet().forEach(p -> System.out.println(p.getKey() + "=" + p.getValue()));
     }
 }

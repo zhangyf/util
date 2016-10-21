@@ -11,7 +11,7 @@ import java.security.cert.CertificateException;
 
 public class CertificateUtilTest {
 
-    @Test
+   // @Test
     public void getSHA1OfCertPk() throws IOException, CertificateException, NoSuchAlgorithmException {
         String certFile = "/home/chenyang/tmp/Snowball.crt";
         PublicKey publicKey = CertificateUtil.getPublicKeyFromCert(certFile);
