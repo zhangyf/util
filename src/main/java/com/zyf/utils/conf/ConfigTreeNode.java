@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class ConfigTreeNode {
+
     private String currentValue;
     private Map<String, ConfigTreeNode> subConfigTree;
 
@@ -34,6 +35,10 @@ public class ConfigTreeNode {
 
     public void setSubConfigTree(Map<String, ConfigTreeNode> subConfigTree) {
         this.subConfigTree = subConfigTree;
+    }
+
+    public boolean isLeaf() {
+        return !currentValue.equals("") && subConfigTree == null;
     }
 
     public String toString() {

@@ -36,7 +36,6 @@ public class XMLConfigUtils extends ConfigUtils {
             throw new IOException(e.getMessage());
         }
 
-        System.out.println(tree.toString());
         return tree;
     }
 
