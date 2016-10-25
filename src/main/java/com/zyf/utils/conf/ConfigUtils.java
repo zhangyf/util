@@ -2,9 +2,7 @@ package com.zyf.utils.conf;
 
 import com.zyf.utils.conf.impl.PropertiesConfigUtils;
 import com.zyf.utils.conf.impl.XMLConfigUtils;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 public abstract class ConfigUtils {
@@ -15,6 +13,9 @@ public abstract class ConfigUtils {
 
     public static ConfigTree getConfig(String path) throws IOException {
 
+        if (path == null) {
+            throw new IOException("config path is null");
+        }
         String[] nameEntries = path.split("\\.");
         String configFileType = nameEntries[nameEntries.length - 1];
 

@@ -1,5 +1,5 @@
 <configurations>
-    <name1>value1</name1>
+    <name1 attn1="attv1" attn2="attv2" attn3="attv3">value1</name1>
     <name2>value2</name2>
     <name3>
         <subName1>subValue1</subName1>

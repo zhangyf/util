@@ -1,8 +1,5 @@
 package com.zyf.utils.conf;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * Created by zhangyufeng on 2016/10/21.
  */
@@ -19,6 +16,19 @@ public class ConfigTree {
 
     public ConfigTreeNode getRoot() {
         return root;
+    }
+
+    public boolean containsKey(String name) {
+        return root.containsKey(name);
+    }
+
+    public ConfigTreeNode get(String name) {
+        ConfigTreeNode value = null;
+        if (root.containsKey(name)) {
+            value = root.traverse(name);
+        }
+
+        return value;
     }
 
     public String toString() {

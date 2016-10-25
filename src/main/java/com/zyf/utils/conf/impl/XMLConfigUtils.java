@@ -3,10 +3,7 @@ package com.zyf.utils.conf.impl;
 import com.zyf.utils.conf.ConfigTree;
 import com.zyf.utils.conf.ConfigTreeNode;
 import com.zyf.utils.conf.ConfigUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -50,6 +47,12 @@ public class XMLConfigUtils extends ConfigUtils {
                         :
                         new ConfigTreeNode("", parseNodeList(node.getChildNodes()));
 
+                if (node.hasAttributes()) {
+                    NamedNodeMap attributesMap = node.getAttributes();
+                    for (int j=0; j<attributesMap.getLength(); j++) {
+                        configTreeNode.addAttribute(attributesMap.item(j).getNodeName(), attributesMap.item(j).getNodeValue());
+                    }
+                }
                 ret.put(node.getNodeName(), configTreeNode);
             }
         }
