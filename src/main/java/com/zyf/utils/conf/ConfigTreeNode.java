@@ -28,6 +28,10 @@ public class ConfigTreeNode {
         return currentValue;
     }
 
+    public String getStringValue() {
+        return currentValue;
+    }
+
     public Integer getIntegerValue() {
         return Integer.parseInt(currentValue);
     }
@@ -77,6 +81,10 @@ public class ConfigTreeNode {
     }
 
     public boolean containsKey(String name) {
+        if (subConfigTree == null) {
+            return false;
+        }
+
         if (subConfigTree.containsKey(name)) {
             return true;
         } else {
