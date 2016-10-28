@@ -108,6 +108,10 @@ public class ConfigTreeNode {
 
     ConfigTreeNode traverse(String name) {
 
+        if (subConfigTree == null) {
+            return null;
+        }
+
         if (subConfigTree.containsKey(name)) {
             if (subConfigTree.containsKey(name)) {
                 return subConfigTree.get(name);
