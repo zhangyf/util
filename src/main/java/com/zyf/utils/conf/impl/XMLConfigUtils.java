@@ -10,7 +10,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,8 +29,9 @@ public class XMLConfigUtils extends ConfigUtils {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(path);
 
-            tree.getRoot().setSubConfigTree(parseNodeList(document.getDocumentElement().getChildNodes()));
-            
+            tree.getRoot().setName(document.getDocumentElement().getNodeName());
+            tree.getRoot().addValue(parseNodeList(document.getDocumentElement().getChildNodes()));
+
         } catch (ParserConfigurationException | SAXException e) {
             throw new IOException(e.getMessage());
         }
@@ -36,24 +39,34 @@ public class XMLConfigUtils extends ConfigUtils {
         return tree;
     }
 
-    private Map<String, ConfigTreeNode> parseNodeList(NodeList nodeList) {
-        Map<String, ConfigTreeNode> ret = new ConcurrentHashMap<>();
+    private Set<ConfigTreeNode> parseNodeList(NodeList nodeList) {
+        Set<ConfigTreeNode> ret = new HashSet<>();
 
         for (int i=0; i<nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                ConfigTreeNode configTreeNode = (node.getChildNodes().getLength() == 1) ?
-                        new ConfigTreeNode(node.getTextContent(), null)
-                        :
-                        new ConfigTreeNode("", parseNodeList(node.getChildNodes()));
-
-                if (node.hasAttributes()) {
-                    NamedNodeMap attributesMap = node.getAttributes();
-                    for (int j=0; j<attributesMap.getLength(); j++) {
-                        configTreeNode.addAttribute(attributesMap.item(j).getNodeName(), attributesMap.item(j).getNodeValue());
+                ConfigTreeNode subNode = new ConfigTreeNode();
+                subNode.setName(node.getNodeName());
+                if (node.getChildNodes().getLength() == 1) {
+                    subNode.addValue(node.getTextContent());
+                    if (node.hasAttributes()) {
+                        NamedNodeMap attributes = node.getAttributes();
+                        for (int j=0; j<attributes.getLength(); j++) {
+                            subNode.addAttribute(attributes.item(j).getNodeName(), attributes.item(j).getNodeValue());
+                        }
+                    }
+                } else {
+                    for (ConfigTreeNode configTreeNode : parseNodeList(node.getChildNodes())) {
+                        subNode.addValue(configTreeNode);
+                        if (node.hasAttributes()) {
+                            NamedNodeMap attributes = node.getAttributes();
+                            for (int j=0; j<attributes.getLength(); j++) {
+                                subNode.addAttribute(attributes.item(j).getNodeName(), attributes.item(j).getNodeValue());
+                            }
+                        }
                     }
                 }
-                ret.put(node.getNodeName(), configTreeNode);
+                ret.add(subNode);
             }
         }
 

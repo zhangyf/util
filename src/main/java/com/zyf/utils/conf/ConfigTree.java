@@ -1,5 +1,8 @@
 package com.zyf.utils.conf;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by zhangyufeng on 2016/10/21.
  */
@@ -18,17 +21,33 @@ public class ConfigTree {
         return root;
     }
 
-    public boolean containsKey(String name) {
-        return root.containsKey(name);
+    public boolean containsByName(String name) {
+        return getRoot().containsByName(name);
     }
 
-    public ConfigTreeNode get(String name) {
-        ConfigTreeNode value = null;
-        if (root.containsKey(name)) {
-            value = root.traverse(name);
+    public boolean containsByAttributeName(String attriName) {
+        return getRoot().containsByAttributeName(attriName);
+    }
+
+    public boolean containsByAttributeValue(String value) {
+        return getRoot().containsByAttributeValue(value);
+    }
+
+    public Set<ConfigTreeNode> getByName(String name) {
+        Set<ConfigTreeNode> result = new HashSet<>();
+
+        if (getRoot().getName().equals("name")) {
+            result.add(getRoot());
         }
 
-        return value;
+        getRoot().getValue().forEach(e -> {
+            if (e instanceof ConfigTreeNode) {
+                ConfigTreeNode tmp = (ConfigTreeNode) e;
+                tmp.getByName(name).forEach(result::add);
+            }
+        });
+
+        return result;
     }
 
     public String toString() {

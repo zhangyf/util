@@ -3,6 +3,7 @@ package com.zyf.utils.conf;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
 
 /**
  * Created by zhangyufeng on 2016/10/21.
@@ -10,86 +11,83 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConfigTreeNode {
 
-    private String currentValue;
-    private Map<String, ConfigTreeNode> subConfigTree;
-    private Map<String, String> nodeAttributes;
+    private String name;
+    private Map<String, String> attributes;
+    private Set<Object> value;
 
     public ConfigTreeNode() {
-        this("", new ConcurrentHashMap<>());
+        name = "";
+        value = new HashSet<>();
+        attributes = new ConcurrentHashMap<>();
     }
 
-    public ConfigTreeNode(String v, Map<String, ConfigTreeNode> subTree) {
-        currentValue = v;
-        subConfigTree = subTree;
-        nodeAttributes = new ConcurrentHashMap<>();
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 
-    public String getCurrentValue() {
-        return currentValue;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<Object> getValue() {
+        return value;
     }
 
     public String getStringValue() {
-        return currentValue;
+        if (getValue().size() == 1) {
+            for (Object o : getValue()) {
+                return (o instanceof String) ? (String) o : null;
+            }
+        }
+
+        return null;
     }
 
     public Integer getIntegerValue() {
-        return Integer.parseInt(currentValue);
+        return (getStringValue() != null) ? Integer.parseInt(getStringValue()) : null;
     }
 
     public Long getLongValue() {
-        return Long.parseLong(currentValue);
+        return (getStringValue() != null) ? Long.parseLong(getStringValue()) : null;
     }
 
     public Short getShortValue() {
-        return Short.parseShort(currentValue);
+        return (getStringValue() != null) ? Short.parseShort(getStringValue()) : null;
     }
 
     public Boolean getBooleanValue() {
-        return Boolean.parseBoolean(currentValue);
+        return (getStringValue() != null) ? Boolean.parseBoolean(getStringValue()) : null;
     }
 
-    public void setCurrentValue(String currentValue) {
-        this.currentValue = currentValue;
-    }
-
-    public Map<String, ConfigTreeNode> getSubConfigTree() {
-        return subConfigTree;
-    }
-
-    public void setSubConfigTree(Map<String, ConfigTreeNode> subConfigTree) {
-        this.subConfigTree = subConfigTree;
+    public void addValue(Object currentValue) {
+        if (currentValue instanceof Set) {
+            @SuppressWarnings("unchecked")
+            Set<ConfigTreeNode> newSet = (Set<ConfigTreeNode>) currentValue;
+            for (Object o : newSet) {
+                getValue().add(o);
+            }
+        } else {
+            getValue().add(currentValue);
+        }
     }
 
     public void addAttribute(String name, String value) {
-        nodeAttributes.putIfAbsent(name, value);
+        getAttributes().put(name, value);
     }
 
-    public void updateAttribute(String name, String value) {
-        nodeAttributes.put(name, value);
-    }
-
-    public String getAttribute(String name) {
-        return nodeAttributes.get(name);
-    }
-
-    public Set<String> getAttributes() {
-        return nodeAttributes.keySet();
-    }
-
-    public boolean isLeaf() {
-        return !currentValue.equals("") && subConfigTree == null;
-    }
-
-    public boolean containsKey(String name) {
-        if (subConfigTree == null) {
-            return false;
+    public boolean containsByName(String name) {
+        if (getName().equals(name)) {
+            return true;
         }
 
-        if (subConfigTree.containsKey(name)) {
-            return true;
-        } else {
-            for (Map.Entry<String, ConfigTreeNode> entry : subConfigTree.entrySet()) {
-                if (entry.getValue().containsKey(name)) {
+        for (Object subValue : getValue()) {
+            if (subValue instanceof ConfigTreeNode) {
+                ConfigTreeNode subNode = (ConfigTreeNode) subValue;
+                if (subNode.containsByName(name)) {
                     return true;
                 }
             }
@@ -98,44 +96,72 @@ public class ConfigTreeNode {
         return false;
     }
 
-    public ConfigTreeNode get(String name) {
-        return traverse(name);
-    }
-
-    public Set<String> getSubKeys() {
-        return subConfigTree.keySet();
-    }
-
-    ConfigTreeNode traverse(String name) {
-
-        if (subConfigTree == null) {
-            return null;
+    public boolean containsByAttributeName(String name) {
+        if (getAttributes().containsKey(name)) {
+            return true;
         }
 
-        if (subConfigTree.containsKey(name)) {
-            if (subConfigTree.containsKey(name)) {
-                return subConfigTree.get(name);
-            } else {
-                for (Map.Entry<String, ConfigTreeNode> entry : subConfigTree.entrySet()) {
-                    if (entry.getValue().containsKey(name)) {
-                        return entry.getValue();
-                    }
+        for (Object subValue : getValue()) {
+            if (subValue instanceof ConfigTreeNode) {
+                ConfigTreeNode subNode = (ConfigTreeNode) subValue;
+                if (subNode.containsByAttributeName(name)) {
+                    return true;
                 }
             }
         }
-        return null;
+
+        return false;
+    }
+
+    public boolean containsByAttributeValue(String value) {
+        for (Map.Entry<String, String> entry : getAttributes().entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return true;
+            }
+        }
+
+        for (Object subValue : getValue()) {
+            if (subValue instanceof ConfigTreeNode) {
+                ConfigTreeNode subNode = (ConfigTreeNode) subValue;
+                if (subNode.containsByAttributeValue(value)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+
+    public Set<ConfigTreeNode> getByName(String name) {
+        Set<ConfigTreeNode> ret = new HashSet<>();
+
+        if (getName().equals(name)) {
+            ret.add(this);
+        }
+
+        if (containsByName(name)) {
+            getValue().forEach(e -> {
+                if (e instanceof ConfigTreeNode) {
+                    ConfigTreeNode tmp = (ConfigTreeNode) e;
+                    tmp.getByName(name).forEach(ret::add);
+                }
+            });
+        }
+
+        return ret;
     }
 
     public String toString() {
         final StringBuffer sb = new StringBuffer("{");
-        nodeAttributes.entrySet().forEach(e -> {
+        getAttributes().entrySet().forEach(e -> {
             sb.append(e.getKey() + "=" + e.getValue() + " ");
         });
         sb.append("}");
 
-        return "{value=" + currentValue
-                + "; attr=" + sb.toString()
-                +"  subTree=" + subConfigTree +"}";
+        return "{name=" + getName()
+                + "; value=" + getValue()
+                + "; attr=" + sb.toString() + "}";
     }
 
 }

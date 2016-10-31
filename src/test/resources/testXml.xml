@@ -5,8 +5,43 @@
         <subName1>subValue1</subName1>
         <subName2>subValue2</subName2>
         <subName3>
-            <subSubName1>subSubValue1</subSubName1>
+            <subSubName1>
+                <subSubSubName1>aaaaa</subSubSubName1>
+            </subSubName1>
             <subSubName2>subSbuValue2</subSubName2>
         </subName3>
     </name3>
+
+    <clusters>
+        <cluster name="xxxx0" type="cassandra">
+            <node>hostname01:9160</node>
+            <node>hostname02:9160</node>
+            <node>hostname03:9160</node>
+            <node>hostname04:9160</node>
+        </cluster>
+
+        <cluster name="xxxx1" type="cassandra">
+            <node>hostname11:9160</node>
+            <node>hostname12:9160</node>
+            <node>hostname13:9160</node>
+            <node>hostname14:9160</node>
+        </cluster>
+
+        <cluster name="xxxx2" type="hbase">
+            <zookeeper>
+                <zkHost>hostname1:2181,hostname2:2181,hostname3:2181</zkHost>
+                <zkPath priority="3">/path/to/node</zkPath>
+                <zkPath priority="2">/path/to/node</zkPath>
+                <zkPath priority="1">/path/to/node</zkPath>
+            </zookeeper>
+        </cluster>
+
+        <cluster name="xxxx3" type="hdfs">
+            <uri>hdfs://xxx.xxx.xxx.xxx:port</uri>
+        </cluster>
+
+        <cluster name="xxxx4" type="redis/memcached">
+            <node>hostname1:port,hostname2:port,hostname3:port</node>
+        </cluster>
+    </clusters>
 </configurations>

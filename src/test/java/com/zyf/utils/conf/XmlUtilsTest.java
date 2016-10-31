@@ -14,24 +14,13 @@ public class XmlUtilsTest {
 
         try {
             ConfigTree configTree = ConfigUtils.getConfig(getClass().getResource("/testXml.xml").toString());
-            System.out.println("root value=" + configTree.getRoot().getCurrentValue());
-            configTree.getRoot().getSubConfigTree().entrySet().forEach(
-                    e -> {
-                        if(e.getValue().isLeaf()) {
-                            System.out.println("leaf node: " + e.getKey() + "=" + e.getValue());
-                        } else {
-                            System.out.println("subTree: ");
-                            e.getValue().getSubConfigTree().entrySet().forEach(
-                                    en -> {
-                                        if (en.getValue().isLeaf()) {
-                                            System.out.println("leaf node: " + en.getKey() + "=" + en.getValue());
-                                        } else {
-                                            System.out.println("subTree: " + en.getValue());
-                                        }
-                                    }
-                            );
-                        }}
-            );
+
+            //System.out.println(configTree);
+
+            System.out.println(configTree.getByName("cluster"));
+            //System.out.println(configTree.getByName("subName1"));
+            //System.out.println(configTree.getByName("subSubSubName1"));
+            //System.out.println(configTree.containsByName("subSubName1"));
         } catch (Exception e) {
             e.printStackTrace();
         }
