@@ -17,7 +17,7 @@ public class XmlUtilsTest {
 
             //System.out.println(configTree);
 
-            System.out.println(configTree.getByName("cluster"));
+            System.out.println(configTree.getByName("cluster").stream().findFirst());
             //System.out.println(configTree.getByName("subName1"));
             //System.out.println(configTree.getByName("subSubSubName1"));
             //System.out.println(configTree.containsByName("subSubName1"));

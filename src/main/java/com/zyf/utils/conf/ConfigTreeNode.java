@@ -1,9 +1,7 @@
 package com.zyf.utils.conf;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.HashSet;
 
 /**
  * Created by zhangyufeng on 2016/10/21.
@@ -133,8 +131,8 @@ public class ConfigTreeNode {
 
     }
 
-    public Set<ConfigTreeNode> getByName(String name) {
-        Set<ConfigTreeNode> ret = new HashSet<>();
+    public Collection<ConfigTreeNode> getByName(String name) {
+        Collection<ConfigTreeNode> ret = new HashSet<>();
 
         if (getName().equals(name)) {
             ret.add(this);
