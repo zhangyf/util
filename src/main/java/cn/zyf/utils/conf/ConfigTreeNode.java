@@ -73,57 +73,29 @@ public class ConfigTreeNode {
     }
 
     public boolean containsByName(String name) {
-        if (getName().equals(name)) {
-            return true;
-        }
-
-        for (Object subValue : getValue()) {
-            if (subValue instanceof ConfigTreeNode) {
-                ConfigTreeNode subNode = (ConfigTreeNode) subValue;
-                if (subNode.containsByName(name)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return getName().equals(name)
+                || getValue().stream().filter(v -> v instanceof ConfigTreeNode)
+                .anyMatch(e -> ((ConfigTreeNode) e).containsByName(name));
     }
 
-    public boolean containsByAttributeName(String name) {
-        if (getAttributes().containsKey(name)) {
-            return true;
-        }
+    public boolean containsByAttributeName(String attrName) {
 
-        for (Object subValue : getValue()) {
-            if (subValue instanceof ConfigTreeNode) {
-                ConfigTreeNode subNode = (ConfigTreeNode) subValue;
-                if (subNode.containsByAttributeName(name)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public boolean containsByAttributeValue(String value) {
-
-        if (getAttributes().entrySet().stream().anyMatch(e -> e.getValue().equals(value))) {
-            return true;
-        }
-
-        for (Object subValue : getValue()) {
-            if (subValue instanceof ConfigTreeNode) {
-                ConfigTreeNode subNode = (ConfigTreeNode) subValue;
-                if (subNode.containsByAttributeValue(value)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return getAttributes().containsKey(attrName)
+                ||
+                getValue().stream().filter(v -> v instanceof ConfigTreeNode)
+                        .anyMatch(e -> ((ConfigTreeNode) e).containsByAttributeName(attrName));
 
     }
+
+    public boolean containsByAttributeValue(String attrValue) {
+
+        return getAttributes().entrySet().stream().anyMatch(e -> e.getValue().equals(attrValue))
+                ||
+                getValue().stream()
+                        .filter(v -> v instanceof ConfigTreeNode)
+                        .anyMatch(e -> ((ConfigTreeNode) e).containsByAttributeValue(attrValue));
+    }
+
 
     public Collection<ConfigTreeNode> getByName(String name) {
         Collection<ConfigTreeNode> ret = new HashSet<>();
@@ -133,15 +105,13 @@ public class ConfigTreeNode {
         }
 
         if (containsByName(name)) {
-            getValue().forEach(e -> {
-                if (e instanceof ConfigTreeNode) {
-                    ConfigTreeNode tmp = (ConfigTreeNode) e;
-                    ret.addAll(tmp.getByName(name));
-                }
+            getValue().stream().filter(v -> v instanceof ConfigTreeNode).forEach(e -> {
+                    ret.addAll(((ConfigTreeNode) e).getByName(name));
             });
         }
 
         return ret;
+
     }
 
     public String toString() {
