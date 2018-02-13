@@ -1,4 +1,4 @@
-package com.zyf.utils.db;
+package cn.zyf.utils.db;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 

@@ -1,4 +1,4 @@
-package com.zyf.utils.conf;
+package cn.zyf.utils.conf;
 
 import org.junit.Test;
 

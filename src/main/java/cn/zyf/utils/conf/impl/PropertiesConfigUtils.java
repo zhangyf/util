@@ -1,7 +1,7 @@
-package com.zyf.utils.conf.impl;
+package cn.zyf.utils.conf.impl;
 
-import com.zyf.utils.conf.ConfigTree;
-import com.zyf.utils.conf.ConfigUtils;
+import cn.zyf.utils.conf.ConfigTree;
+import cn.zyf.utils.conf.ConfigUtils;
 
 import java.io.*;
 import java.util.HashMap;

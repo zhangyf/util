@@ -1,4 +1,4 @@
-package com.zyf.utils.conf;
+package cn.zyf.utils.conf;
 
 import org.junit.Test;
 
@@ -16,10 +16,10 @@ public class PropertiesUtilsTest {
 
         ConfigTree params;
 
-        params = ConfigUtils.getConfig("");
+        //params = ConfigUtils.getConfig("");
        // params.entrySet().forEach(p -> System.out.println(p.getKey() + "=" + p.getValue()));
 
-        params = ConfigUtils.getConfig(getClass().getResource("/testProperties.properties").toString());
+       // params = ConfigUtils.getConfig(getClass().getResource("/testProperties.properties").toString());
        // params.entrySet().forEach(p -> System.out.println(p.getKey() + "=" + p.getValue()));
     }
 }

@@ -1,7 +1,8 @@
-package com.zyf.utils.conf;
+package cn.zyf.utils.conf;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by zhangyufeng on 2016/10/21.
@@ -36,13 +37,7 @@ public class ConfigTreeNode {
     }
 
     public String getStringValue() {
-        if (getValue().size() == 1) {
-            for (Object o : getValue()) {
-                return (o instanceof String) ? (String) o : null;
-            }
-        }
-
-        return null;
+        return Objects.requireNonNull(getValue().stream().findFirst().orElse(null)).toString();
     }
 
     public Integer getIntegerValue() {
@@ -112,10 +107,9 @@ public class ConfigTreeNode {
     }
 
     public boolean containsByAttributeValue(String value) {
-        for (Map.Entry<String, String> entry : getAttributes().entrySet()) {
-            if (entry.getValue().equals(value)) {
-                return true;
-            }
+
+        if (getAttributes().entrySet().stream().anyMatch(e -> e.getValue().equals(value))) {
+            return true;
         }
 
         for (Object subValue : getValue()) {
@@ -142,7 +136,7 @@ public class ConfigTreeNode {
             getValue().forEach(e -> {
                 if (e instanceof ConfigTreeNode) {
                     ConfigTreeNode tmp = (ConfigTreeNode) e;
-                    tmp.getByName(name).forEach(ret::add);
+                    ret.addAll(tmp.getByName(name));
                 }
             });
         }
@@ -151,15 +145,11 @@ public class ConfigTreeNode {
     }
 
     public String toString() {
-        final StringBuffer sb = new StringBuffer("{");
-        getAttributes().entrySet().forEach(e -> {
-            sb.append(e.getKey() + "=" + e.getValue() + " ");
-        });
-        sb.append("}");
 
         return "{name=" + getName()
                 + "; value=" + getValue()
-                + "; attr=" + sb.toString() + "}";
-    }
+                + "; attr=" + getAttributes().entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining(" ","{","}")) + "}";
 
+    }
 }

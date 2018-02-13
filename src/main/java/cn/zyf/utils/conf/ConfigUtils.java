@@ -1,7 +1,8 @@
-package com.zyf.utils.conf;
+package cn.zyf.utils.conf;
 
-import com.zyf.utils.conf.impl.PropertiesConfigUtils;
-import com.zyf.utils.conf.impl.XMLConfigUtils;
+import cn.zyf.utils.conf.ConfigTree;
+import cn.zyf.utils.conf.impl.PropertiesConfigUtils;
+import cn.zyf.utils.conf.impl.XMLConfigUtils;
 
 import java.io.IOException;
 

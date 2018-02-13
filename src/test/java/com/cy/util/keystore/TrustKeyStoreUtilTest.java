@@ -22,7 +22,7 @@ public class TrustKeyStoreUtilTest {
 
     private String testTrustStore = "testTrust.keystore";
 
-    @Test
+    //@Test
     public void testGetEntryCertificates() throws CertificateException, NoSuchAlgorithmException,
             KeyStoreException, IOException, NoSuchProviderException, SignatureException {
         URL url = ConfigurationUtils.locate(FileSystem.getDefaultFileSystem(), null, testTrustStore);

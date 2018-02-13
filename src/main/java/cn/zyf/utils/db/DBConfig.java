@@ -1,4 +1,4 @@
-package com.zyf.utils.db;
+package cn.zyf.utils.db;
 
 /**
  * Created by zhangyufeng on 2016/9/29.
